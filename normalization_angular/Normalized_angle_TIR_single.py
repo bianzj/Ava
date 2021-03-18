@@ -61,6 +61,9 @@ if ifcoeffa == 1:
                     infile_obliq_vza = indir2 + symbol +'_2019%03d'%(kday+1)+'_night_vza_obliq.tif'
 
                     infile_cloud = indir2+ symbol +'_2019%03d'%(kday+1)+'_night_cloud.tif'
+
+
+
                     if ((os.path.exists(infile_nadir_lst) ==1) * (os.path.exists(infile_obliq_lst)==1)):
                         [lst1,ns,nl,temp,geog,proj] = read_image_gdal(infile_nadir_lst)
                         [lst2, ns, nl, temp, geog, proj] = read_image_gdal(infile_obliq_lst)

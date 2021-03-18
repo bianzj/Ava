@@ -1,8 +1,5 @@
-from myfun_image import *
-from myfun_file import *
-from myfun_sci import *
+from util.myfun import *
 from pyhdf.SD import SD, SDC
-from MODIS_constant import *
 import time
 import os
 
@@ -11,10 +8,10 @@ os.environ['PROJ_LIB'] = r'C:\ProgramData\Anaconda3\envs\python37\Library\share\
 ##############################################3
 ######## total water colume polar orbiting
 ###############################################
-indir_ERA5 = r'D:\data\lst\anxiliary_data\era5_tcw/'
-indir_data = r'H:\ahi_tif/'
-targetArea = r'D:\data\lst\anxiliary_data\china_ref.tif'
-infile_ear5_ref = r'D:\data\lst\anxiliary_data\\world_equal_latlon.tif'
+indir_ERA5 = r'D:\data\base\era5_tcw/'
+indir_data = r'G:\ahi_tif/'
+targetArea = r'D:\data\base\type.tif'
+infile_ear5_ref = r'D:\data\base\\\world_equal_latlon.tif'
 days_of_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 dataset = gdal.Open(targetArea)
@@ -62,12 +59,14 @@ object_name = 'tcwv'
 dayNight = 'day'
 fileNames = search_file(indir_data, ['bt1'])
 fileNum = len(fileNames)
-for k in range(4356,fileNum - 1):
+for k in range(0,fileNum - 1):
     fileName = fileNames[k]
     year = np.int(fileName[-20:-16])
     doy = np.int(fileName[-16:-13])
     passtime = np.int(fileName[-12:-8])
     symbol = fileName[-24:-21]
+
+    if doy >= 150: continue
 
     file0 = symbol + '_%04d' % year + '%03d' % doy + '_' + '%04d'%passtime
     print(k, fileName)

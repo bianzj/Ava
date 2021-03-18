@@ -60,31 +60,7 @@ def kernel_LSF(vza):
     Klsf = 0.069*np.cos(thetav)*np.cos(thetav)-0.215*np.cos(thetav)+1.176
     return Klsf
 
-def model_Vin(vza,coeffa):
-    Vin = 1-np.cos(vza*rd)
-    return coeffa*Vin
 
-def model_LSF(vza,coeffa):
-    thetav = np.deg2rad(abs(vza))
-    LSF =  0.069*np.cos(thetav)*np.cos(thetav)-0.215*np.cos(thetav)+1.176
-    return coeffa*LSF
-
-def model_RLE(sza,vza,raa,rad,coeffb,coeffk):
-    f = np.sqrt((np.power(np.tan(sza*rd), 2) + np.power(np.tan(vza*rd), 2) - 2 * np.tan(sza*rd) * np.tan(vza*rd) *
-                 np.cos(raa*rd)))
-    fn = np.tan(sza*rd)
-    ind = (coeffk != 0) *(fn != 0)
-    RLE = rad*1.0
-    RLE[:] = 0
-
-    RLE[ind] = coeffb[ind] * rad[ind] * (np.exp(-coeffk[ind] * f[ind]) - np.exp(-coeffk[ind] * fn[ind])) \
-            / (1 - np.exp(-coeffk[ind] * fn[ind]))
-    return RLE
-
-def model_VinRLE(sza,vza,raa,rad,coeffa,coeffb,coeffk):
-    Vin = model_Vin(vza,coeffa)
-    RLE = model_RLE(sza,vza,raa,rad,coeffb,coeffk)
-    return Vin,RLE
 
 def kernel_LSRRoss(sza, vza, raa):
 
@@ -127,7 +103,7 @@ def kernel_LSRRoss(sza, vza, raa):
 #### forward model
 ###########################################3
 
-def model_def_Vin(x, coeffa):
+def model_Vin(x,coeffa):
 
     lst1 = x[0]
     lst2 = x[1]
@@ -138,7 +114,7 @@ def model_def_Vin(x, coeffa):
     x = phi1*lst2 - phi2*lst1
     return x*coeffa
 
-def model_def_RLE(x, b, k):
+def model_RLE(x,b,k):
 
     a = x[8]
     rad = x[9]
@@ -191,7 +167,7 @@ def fun_LSF(x,lst1,lst2,vza1,vza2):
     phi1 = 0.069*np.cos(vza1*rd)*np.cos(vza1*rd)-0.215*np.cos(vza1*rd)+1.176
     phi2 = 0.069*np.cos(vza2*rd)*np.cos(vza2*rd)-0.215*np.cos(vza2*rd)+1.176
     y = lst1 - lst2
-    res = (phi1 - phi2)*x - y
+    res = (phi1*lst2 - phi2*lst1)*x - y
 
     return np.sum(res**2)
 
@@ -215,6 +191,9 @@ def fun_VinRLE_rad_bk(x,lst1,lst2,vza1,vza2,sza1,sza2,psi1,psi2,a,rad):
     fn = np.tan(thetas1)
     phi1 = 1 - np.cos(thetav1)
     phi2 = 1 - np.cos(thetav2)
+
+
+
 
     res = a * (phi1*lst2 - phi2*lst1) + b * rad *(np.exp(-k*f1)-np.exp(-k*f2))/(1-np.exp(-k*fn)) - (lst1 - lst2)
     return np.sum(res*res)
@@ -334,7 +313,7 @@ def fun_LSFRLE_ta_bk(x, lst1, lst2, vza1, vza2, sza1, sza2, psi1, psi2, a, ta):
     phi2 = 0.069*np.cos(vza2*rd)*np.cos(vza2*rd)-0.215*np.cos(vza2*rd)+1.176
 
 
-    res = a * (phi1 - phi2) + b * ta * (np.exp(-k * f1) - np.exp(-k * f2)) / (1 - np.exp(-k * fn)) - (lst1 - lst2)
+    res = a * (phi1*lst2 - phi2*lst1) + b * ta * (np.exp(-k * f1) - np.exp(-k * f2)) / (1 - np.exp(-k * fn)) - (lst1 - lst2)
     return np.sum(res*res)
 
 def fun_LSFRLE_ta_full(x, lst1, lst2, vza1, vza2, sza1, sza2, psi1, psi2, ta):
@@ -363,7 +342,7 @@ def fun_LSFRLE_ta_full(x, lst1, lst2, vza1, vza2, sza1, sza2, psi1, psi2, ta):
     phi2 = 0.069*np.cos(vza2*rd)*np.cos(vza2*rd)-0.215*np.cos(vza2*rd)+1.176
 
     mea = lst1 - lst2
-    mod = a * (phi1  - phi2 ) + b * ta * (np.exp(-k * f1) - np.exp(-k * f2)) / (1 - np.exp(-k * fn))
+    mod = a * (phi1 * lst2 - phi2 * lst1) + b * ta * (np.exp(-k * f1) - np.exp(-k * f2)) / (1 - np.exp(-k * fn))
     ind = sza1 > 80
     mod_night = a * (phi1 * lst2 - phi2 * lst1)
     mod[ind] = mod_night[ind]

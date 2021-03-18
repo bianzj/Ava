@@ -1,5 +1,5 @@
 from util.myfun import *
-from AngularNormalization.fitting_kernels import *
+from fitting_kernels import *
 # from myfun_plot import *
 # os.environ['PROJ_LIB'] = r'C:\Users\zzz\anaconda3\envs\patrol\Library\share\proj'
 import time
@@ -13,14 +13,14 @@ import multiprocessing
 
 def coeff_invert(kdoy,off,l1,l2,s1,s2,outdir):
 
-    indir_s3a = r'j:/S3A_tif/'
-    indir_s3b = r'i:/S3B_tif/'
+    indir_s3a = r'F:/S3A_tif/'
+    indir_s3b = r'H:/S3B_tif/'
     indirs2 = [indir_s3a, indir_s3b]
-    indir_s3a = r'j:/S3A_LST/'
-    indir_s3b = r'i:/S3B_LST/'
+    indir_s3a = r'F:/S3A_LST/'
+    indir_s3b = r'H:/S3B_LST/'
     indirs1 = [indir_s3a, indir_s3b]
 
-    infile_type = r'j:/type.tif'
+    infile_type = r'D:\data\lst\base/type.tif'
     [type, ns, nl, nb, geog, proj] = read_image_gdal(infile_type)
     symbols = ['S3A', 'S3B']
     num = 365
@@ -31,7 +31,7 @@ def coeff_invert(kdoy,off,l1,l2,s1,s2,outdir):
 
 
     ifcoeffa = 1
-    ifcoeffb = 0
+    ifcoeffb = 1
     th = 220
 
     if ifcoeffa == 1:
@@ -221,7 +221,7 @@ if __name__ == '__main__':
     l2 = 750
     s1 = 900
     s2 = 1100
-    outdir = r'j:/an/Bcoeff_step/'
+    outdir = r'D:\data\an/Bcoeff_step/'
 
     # param = []
     # for i in range(15,16,30):

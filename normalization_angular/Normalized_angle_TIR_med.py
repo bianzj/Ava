@@ -7,10 +7,6 @@ from multiprocessing import Pool, cpu_count
 import multiprocessing
 
 
-
-
-
-
 def coeff_invert(kdoy,off,l1,l2,s1,s2,outdir):
 
     indir_s3a = r'j:/S3A_tif/'
@@ -92,7 +88,7 @@ def coeff_invert(kdoy,off,l1,l2,s1,s2,outdir):
                 cloud1 = cloud_nadir[:,kl,ks]
                 cloud2 = cloud_obliq[:,kl,ks]
 
-                ind = (lst1 > 1)*(cloud1==0.0)*(cloud2 ==0)*(np.abs(lst1-lst2)<5)*(lst2>0)
+                ind = (lst1 > 1)*(cloud1==0.0)*(cloud2 ==0)*(np.abs(lst1-lst2)<10)*(lst2>0)
                 if np.sum(ind) < 2: continue
                 lst1 = lst1[ind]
                 lst2 = lst2[ind]
